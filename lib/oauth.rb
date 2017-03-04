@@ -123,7 +123,7 @@ get '/vk_action' do
 			redirect '/login'
 		elsif hash.include? 'access_token' and hash.include? 'user_id' then
 			# Запрос к серверу для получения данных об игроке
-			uri = URI.parse('https://api.vk.com/method/users.get?uids='+hash['user_id'].to_s+'&fields=id,photo_50,city,verified,sex,bdate,country,has_mobile,contacts&access_token='+hash['access_token'].to_s)
+			uri = URI.parse('https://api.vk.com/method/users.get?uids='+hash['user_id'].to_s+'&fields=id,photo_200,city,verified,sex,bdate,country,has_mobile,contacts&access_token='+hash['access_token'].to_s)
 			http = Net::HTTP.new(uri.host, uri.port)
 			http.use_ssl = true
 			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -137,6 +137,8 @@ get '/vk_action' do
 			user_hash[:social] = 'vk'
 			user_hash[:nickname] = notuse_htmltags(result_hash["response"][0]["first_name"].to_s+" "+result_hash["response"][0]["last_name"].to_s) # Экранируем html-теги в логине игрока
 			user_hash[:user_id_in_social] = result_hash["response"][0]["uid"].to_i
+			
+			user_hash[:image_url] = result_hash["response"][0]["photo_200"] if result_hash["response"][0].include? "photo_200"
 			
 			# дата рождения Возвращается в формате DD.MM.YYYY или DD.MM (если год рождения скрыт).
 			# Если дата рождения скрыта целиком, поле отсутствует в ответе.

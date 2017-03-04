@@ -112,7 +112,7 @@ class User
 		'sex', user_hash[:sex].to_s, 
 		'social_userid', user_hash[:user_id_in_social].to_s,
 		'social',  user_hash[:social],
-		'image_url', user_hash[:image_url]
+		'image_url', user_hash[:image_url].to_s
 		
 		if user_hash[:social] == 'ok' then
 			$r.set 'user:od_userid:'+user_hash[:user_id_in_social].to_s, id
