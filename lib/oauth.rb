@@ -42,6 +42,9 @@ get '/ok_action' do
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		request = Net::HTTP::Post.new(uri.request_uri)
 		response = http.request(request)
+		
+		write_log(response.body)
+		
 		# Получаем {"access_token": "kjdhfldjfhgldsjhfglkdjfg9ds8fg0sdf8gsd8fg", "token_type": "session", "refresh_token": "klsdjhf0e9dyfasduhfpasdfasdfjaspdkfjp"}
 		hash = JSON.parse response.body
 		
