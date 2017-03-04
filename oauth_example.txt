@@ -1,0 +1,158 @@
+# Общая точка для входа в игру с помощью oauth-авторизации соц сетей
+get '/login' do
+	# Пользователь уже в игре
+	if session['user_id'].to_i > 0 then
+		redirect main_page
+	else
+		# Если параметр oauth-провайдера не получен, то просто отобразить страницу с кнопками для входа
+		if params['type'].nil?
+			erb :login_oauth
+		else
+			# Находим с помощью какого oauth-провайдера пользователь хочет попасть(зарегистрироваться или продолжить играть) в игру
+			type = params['type'].to_s
+			
+			if type == 'vk' then
+				redirect "http://oauth.vk.com/authorize?client_id=5027551&display=mobile&redirect_uri=http://cosmoslot.ru/vk_action&response_type=code"
+			elsif type == 'ok' then
+				redirect "http://www.odnoklassniki.ru/oauth/authorize?client_id=1148777472&response_type=code&redirect_uri=http://cosmoslot.ru/ok_action&layout=m&scope="
+			elsif type == 'mm' then
+				redirect "https://connect.mail.ru/oauth/authorize?client_id=736526&response_type=code&redirect_uri=http://cosmoslot.ru/mm_action"
+			elsif type == 'wot' then
+				redirect "https://api.worldoftanks.ru/wot/auth/login/?application_id=869a37be5d86367256f6da97f17ea62c&redirect_uri=http://cosmoslot.ru/wot_action&display=page"
+			else
+				redirect '/login'
+			end
+		end
+	end
+end
+
+# Обработка входа через World of Tanks
+get '/wot_action' do
+	if !params['status'].nil? then
+		if params['status'].to_s == 'ok' then
+			# Параметры, которые мы получаем в ответе
+			#access_token — ключ доступа, передаётся во все методы, требующие аутентификации;
+			#expires_at — срок действия access_token;
+			#account_id — идентификатор пользователя;
+			#nickname — имя пользователя.
+			#write_log(params['status'].to_s+' '+params['access_token'].to_s+' '+params['expires_at'].to_s+' '+params['account_id'].to_s+' '+params['nickname'].to_s)
+			
+			params['account_id'].to_s+' '+params['nickname'].to_s
+			
+			# Смысла запрашивать данные об игроке нет. Описание метода - https://ru.wargaming.net/developers/api_reference/wot/account/info/
+			# Ничего ценного там нет(ни пола, ни возраста, ни телефона, ни почты). А в предыдущем запросе мы уже получаем логин игрока и его id в WOT.
+			# Запрашиваем информацию о пользователе
+			#uri = URI.parse('http://api.worldoftanks.ru/wot/account/info/?application_id=869a37be5d86367256f6da97f17ea62c&access_token='+params['access_token'].to_s+'&account_id='+params['account_id'].to_s)
+			#request = Net::HTTP::Get.new(uri.request_uri)
+			#response = Net::HTTP.start(uri.host, uri.port) do |http|
+			#	http.request(request)
+			#end
+			#response.body
+		else
+			redirect '/login'
+		end
+	else
+		redirect '/login'
+	end
+end
+
+# Обработка входа через Мой мир
+get '/mm_action' do
+	if !params['error'].nil? then
+		redirect '/login'
+	elsif !params['code'].nil? then
+		uri = URI.parse('https://connect.mail.ru/oauth/token?client_id=736526&client_secret=5dca467f7a771c3a2aafa9d070fb8584&grant_type=authorization_code&code='+params['code'].to_s+'&redirect_uri=http://cosmoslot.ru/mm_action')
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = true
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		request = Net::HTTP::Post.new(uri.request_uri)
+		response = http.request(request)
+		# Получаем access_token
+		hash = JSON.parse response.body
+		
+		if hash.include? 'error' then
+			redirect '/login'
+		elsif hash.include? 'access_token' then
+			sig=MD5.new('app_id=736526method=users.getInfosecure=1session_key='+hash['access_token'].to_s+'5dca467f7a771c3a2aafa9d070fb8584').to_s
+			
+			# Запрос к серверу для получения данных об игроке		
+			uri = URI.parse('http://www.appsmail.ru/platform/api?method=users.getInfo&secure=1&app_id=736526&session_key='+hash['access_token'].to_s+'&sig='+sig)
+			request = Net::HTTP::Get.new(uri.request_uri)
+			response = Net::HTTP.start(uri.host, uri.port) do |http|
+				http.request(request)
+			end
+			response.body
+		else
+			redirect '/login'
+		end
+	else
+		redirect '/login'
+	end
+end
+
+get '/ok_action' do 
+	if !params['error'].nil? then
+		redirect '/login'
+	elsif !params['code'].nil? then
+		uri = URI.parse('https://api.odnoklassniki.ru/oauth/token.do?code='+params['code'].to_s+'&client_id=1148777472&client_secret=629A26FCABF82B11FDDE1043&redirect_uri=http://cosmoslot.ru/ok_action&grant_type=authorization_code')
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = true
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		request = Net::HTTP::Post.new(uri.request_uri)
+		response = http.request(request)
+		# Получаем {"access_token": "kjdhfldjfhgldsjhfglkdjfg9ds8fg0sdf8gsd8fg", "token_type": "session", "refresh_token": "klsdjhf0e9dyfasduhfpasdfasdfjaspdkfjp"}
+		hash = JSON.parse response.body
+		
+		if hash.include? 'error' then
+			redirect '/login'
+		elsif hash.include? 'access_token' then
+			str_for_sig='application_key=CBAFPJHFEBABABABAmethod=users.getCurrentUser'+MD5.new(hash['access_token'].to_s+'629A26FCABF82B11FDDE1043').to_s
+			sig=MD5.new(str_for_sig).to_s.downcase.to_s
+
+			# Запрос к серверу для получения данных об игроке		
+			uri = URI.parse('http://api.odnoklassniki.ru/fb.do?method=users.getCurrentUser&access_token='+hash['access_token'].to_s+'&application_key=CBAFPJHFEBABABABA&sig='+sig)
+			request = Net::HTTP::Get.new(uri.request_uri)
+			response = Net::HTTP.start(uri.host, uri.port) do |http|
+				http.request(request)
+			end
+			response.body
+		else
+			redirect '/login'
+		end
+	else
+		redirect '/login'
+	end
+end
+
+# Обработка входа через Вконтакте
+get '/vk_action' do
+	if !params['error'].nil? then
+		redirect '/login'
+	elsif !params['code'].nil? then
+		uri = URI.parse('https://oauth.vk.com/access_token?client_id=5027551&client_secret=PmzLqPcZwq4l40jTNlye&redirect_uri=http://cosmoslot.ru/vk_action&code='+params['code'].to_s)
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = true
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		request = Net::HTTP::Get.new(uri.request_uri)
+		response = http.request(request)
+		# Получаем {"access_token":"697a574c8b9e8a1fda25b0f38ed9c78196ae4473fd7c47ebd9ee836339c1a9f1741877bb4d6ff6919a8d9690db26b","expires_in":86400,"user_id":15929664}
+		hash = JSON.parse response.body
+		
+		if hash.include? 'error' then
+			redirect '/login'
+		elsif hash.include? 'access_token' and hash.include? 'user_id' then
+			# Запрос к серверу для получения данных об игроке
+			uri = URI.parse('https://api.vk.com/method/users.get?uids='+hash['user_id'].to_s+'&fields=id,photo_50,city,verified,sex,bdate,country,has_mobile,contacts&access_token='+hash['access_token'].to_s)
+			http = Net::HTTP.new(uri.host, uri.port)
+			http.use_ssl = true
+			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+			request = Net::HTTP::Get.new(uri.request_uri)
+			response = http.request(request)
+			data = response.body
+		else
+			redirect '/login'
+		end
+	else
+		redirect '/login'
+	end
+end

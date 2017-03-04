@@ -1,0 +1,13 @@
+environment: production
+chdir: /usr/local/ridemate
+pid: /usr/local/ridemate/tmp/thin.pid
+rackup: /usr/local/ridemate/config.ru
+log: /usr/local/ridemate/tmp/thin.log
+address: 95.213.237.75
+port: 3402
+servers: 1
+max_conns: 5000
+timeout: 60
+max_persistent_conns: 5000
+daemonize: true
+require: []

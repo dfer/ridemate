@@ -1,0 +1,14 @@
+TEXT_GAMEOVER   = "ИГРА ЗАКОНЧЕНА";
+TEXT_CONGRATS   = "ПОЗДРАВЛЯЮ";
+TEXT_MONEY      = "ДЕНЬГИ";
+TEXT_PLAY       = "ИГРАТЬ";
+TEXT_BET        = "СТАВКА";
+TEXT_COIN       = "МОНЕТЫ";
+TEXT_MAX_BET    = "MAX";
+TEXT_INFO       = "ИНФО";
+TEXT_LINES      = "ЛИНИИ";
+TEXT_SPIN       = "SPIN";
+TEXT_WIN        = "ПРИЗ";
+TEXT_HOLD       = "HOLD";
+TEXT_HELP_WILD  = "СИМВОЛ МОЖЕТ ЗАМЕНИТЬ ЛЮБОЙ ДРУГОЙ ДЛЯ ПОЛУЧЕНИЯ КОМБО";
+TEXT_HELP_BONUS = "ТРИ ИЛИ БОЛЬШЕ ЗВЕЗД ОТКРОЮТ БОНУСНУЮ ИГРУ";

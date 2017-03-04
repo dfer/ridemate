@@ -1,0 +1,1 @@
+﻿nginx -c /usr/local/ridemate/nginx/nginx.conf

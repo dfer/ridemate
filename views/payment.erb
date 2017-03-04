@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>КосмоСлоты</title>
+        <link rel="stylesheet" href="../css/reset.css" type="text/css">
+        <link rel="stylesheet" href="../css/main.css?t=1" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+      <meta name="msapplication-tap-highlight" content="no"/>
+</head>
+<body>
+<div id="table_payment" style="position: absolute; left: 0px; top: 0px;z-index:1; width:100%;">
+    <center>
+    <div style="background-color: #2d3149; border-top: 1px solid #000; padding-bottom: 20px; padding-top: 20px;">
+      <table>
+        <tbody><tr>
+          <td align="center" style="color: #fff" colspan="2">
+            У Вас <%= @user.money.to_s %> фишек<br><br>
+            Добавить фишки
+          </td>
+        </tr>
+        
+        <tr>
+          <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+          <div>
+            <form method="get" action="/payment_action">
+              <button style="background: #4d1d6d; border: none; width: 100%; color: #fff; height: 40px;" type="submit">
+                <table>
+                  <tbody><tr>
+                  <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                  <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">80 000$ за 1000 рублей</td>
+                  </tr>
+                  </tbody></table>
+              </button>
+            </form>
+          </div>
+          </td>
+              <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+                <div><form method="get" action="/payment_action">
+                 <button style="background: #3b2d7d; border: none; width: 100%; color: #fff; height: 40px;" type="submit">
+                    <table>
+                      <tbody><tr>
+                        <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                        <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">25 000$ за 500 рублей</td>
+                      </tr>
+                    </tbody></table>
+                  </button></form>
+                </div>
+              </td>
+        </tr>
+        
+        <tr>
+              <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+                <div><form method="get" action="/payment_action">
+                  <button style="background: #1b3d6d; border: none; width: 100%; color: #fff; height: 40px;" type="submit">
+                    <table>
+                      <tbody><tr>
+                        <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                        <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">11 100$ за 300 рублей</td>
+                      </tr>
+                    </tbody></table>
+                  </button></form>
+                </div>
+              </td>
+              <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+                <div><form method="get" action="/payment_action">
+                 <button style="background: #3b5179; border: none; width: 100%; color: #fff; height: 40px;" type="submit">
+                    <table>
+                      <tbody><tr>
+                        <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                        <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">5 000$ за 200 рублей</td>
+                      </tr>
+                    </tbody></table>
+                  </button></form>
+                </div>
+              </td></tr><tr>
+              <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+                <div><form method="get" action="/payment_action">
+                  <button style="background: #235d5d; border: none; width: 100%; color: #FFFFFF; height: 40px;" type="submit">
+                    <table>
+                      <tbody><tr>
+                        <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                        <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">2 250$ за 100 рублей</td>
+                      </tr>
+                    </tbody></table>
+                  </button></form>
+                </div>
+              </td>
+              <td style="width: 50%; padding-top: 5px; padding-right: 2px; padding-left: 2px;">
+                <div><form method="get" action="/payment_action">
+                  <button style="background: #2f6d5d; border: none; width: 100%; color: #fff; height: 40px;" type="submit">
+                    <table>
+                      <tbody><tr>
+                        <td width="28px"><img src="http://144.76.72.53:100/logist/game_3x7/money.png"></td>
+                        <td align="left" style="vertical-align: middle; padding-left: 5px;color:#fff;">1 000$ за 50 рублей</td>
+                      </tr>
+                    </tbody></table>
+                  </button></form>
+                </div>
+              </td></tr>
+              
+              <tr>
+          <td align="center" colspan="2" style="color: #fff">
+            <br>
+            <div><form action="/main/654321" method="get">
+              <button type="submit" style="background: #2f6d5d; border: none; width: 100%; color: #fff; height: 40px;">
+                <center>
+                <table>
+                  <tbody><tr>
+                    <td style="vertical-align: middle; padding-left: 5px;color:#fff;">Назад в игру</td>
+                  </tr>
+                </tbody></table>
+                </center>
+              </button></form>
+            </div>
+          </td>
+        </tr>
+      </tbody></table>
+      <br><font color="white">Если Вы живете не в России, то стоимость фишек будет рассчитана по текущему курсу для вашей страны.</font>
+    </div>
+</center>
+</div>
+</body>
+</html>
