@@ -36,9 +36,10 @@
 # from_y - координата 2 Стартовой точки
 # to_x - координата 1 Конечной точки
 # to_y - координата 2 Конечной точки
+# image_url - аватарка из Социальной сети
 
 class User
-	attr_accessor :id, :login, :name, :from, :to, :from_time, :to_time, :day1, :day2, :day3, :day4, :day5, :day6, :day7, :model, :phone, :about, :datefrom, :dateaction, :trips, :exp, :smoke, :age, :sex, :social_userid, :social, :from_x, :from_y, :to_x, :to_y
+	attr_accessor :id, :login, :name, :from, :to, :from_time, :to_time, :day1, :day2, :day3, :day4, :day5, :day6, :day7, :model, :phone, :about, :datefrom, :dateaction, :trips, :exp, :smoke, :age, :sex, :social_userid, :social, :from_x, :from_y, :to_x, :to_y, :image_url
 	attr_reader :password
 	
 	def password=(val)
@@ -52,7 +53,7 @@ class User
 		if !id.nil? and id.to_i > 0 then
 			@id = id.to_i
 			
-			hash = $r.hmget 'user:'+@id.to_s, 'login', 'name', 'from', 'to', 'from_time', 'to_time', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'model', 'phone', 'about', 'datefrom', 'dateaction', 'trips', 'exp', 'smoke', 'age', 'sex', 'social_userid', 'social', 'from_x', 'from_y', 'to_x', 'to_y'
+			hash = $r.hmget 'user:'+@id.to_s, 'login', 'name', 'from', 'to', 'from_time', 'to_time', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'model', 'phone', 'about', 'datefrom', 'dateaction', 'trips', 'exp', 'smoke', 'age', 'sex', 'social_userid', 'social', 'from_x', 'from_y', 'to_x', 'to_y', 'image_url'
 			
 			@login = hash[0]
 			@name = hash[1]
@@ -83,6 +84,7 @@ class User
 			@from_y = hash[26]
 			@to_x = hash[27]
 			@to_y = hash[28]
+			@image_url = hash[29]
 		end
 	end
 	
@@ -109,7 +111,8 @@ class User
 		'age', user_hash[:age].to_s, 
 		'sex', user_hash[:sex].to_s, 
 		'social_userid', user_hash[:user_id_in_social].to_s,
-		'social',  user_hash[:social]
+		'social',  user_hash[:social],
+		'image_url', user_hash[:image_url]
 		
 		if user_hash[:social] == 'ok' then
 			$r.set 'user:od_userid:'+user_hash[:user_id_in_social].to_s, id
@@ -151,7 +154,8 @@ class User
 		'from_x', @from_x, 
 		'from_y', @from_y, 
 		'to_x', @to_x, 
-		'to_y', @to_y
+		'to_y', @to_y,
+		'image_url', @image_url
 	end
 	
 	# Перенесем механизм сообщений из session['message'] в базу

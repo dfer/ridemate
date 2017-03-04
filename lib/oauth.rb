@@ -70,6 +70,7 @@ get '/ok_action' do
 			user_hash[:user_id_in_social] = result_hash["uid"].to_i
 			
 			user_hash[:age] = result_hash["age"].to_i if result_hash.include? "age"
+			user_hash[:image_url] = result_hash["pic_3"] if result_hash.include? "pic_3"
 			
 			# Пол игрока
 			if result_hash.include? "gender" then
