@@ -8,7 +8,10 @@
     
     <div style="border-top: 1px solid #000; padding-bottom: 10px; padding-top: 10px;">
     <table><tbody>
-    	<tr><td style="color: white" colspan="2" align="center"><%= @user.login %><br>Ваш ID <%= @user.id.to_s %><br></td></tr>
+    	<tr><td style="color: white" colspan="2" align="center"><%= @user.login %><br>Ваш ID <%= @user.id.to_s %><br>
+      <%= 'Пол: '+@user.sex.to_s+', Возраст: '+@user.age.to_s %>
+      
+      </td></tr>
       <tr><td style="color: white" colspan="2" align="center"></td></tr>
     </tbody></table>
     </body>

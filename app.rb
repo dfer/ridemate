@@ -467,7 +467,28 @@ helpers do
 	
 	def url_page(page)
 		return page #+'/'+rand(100_000).to_s
-	end	
+	end
+	
+	# Расстояние между координатами в метрах
+	RAD_PER_DEG = 0.017453293  #  PI/180
+	def haversine_distance(lat1, lon1, lat2, lon2)	
+		dlon = lon2 - lon1  
+		dlat = lat2 - lat1  
+		 
+		dlon_rad = dlon * RAD_PER_DEG  
+		dlat_rad = dlat * RAD_PER_DEG  
+		 
+		lat1_rad = lat1 * RAD_PER_DEG  
+		lon1_rad = lon1 * RAD_PER_DEG  
+		 
+		lat2_rad = lat2 * RAD_PER_DEG  
+		lon2_rad = lon2 * RAD_PER_DEG  
+		 
+		a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2  
+		c = 2 * Math.asin( Math.sqrt(a))  
+
+		return (6372795 * c).to_i
+	end
 end
 
 #------------------------ Код проекта -----------
@@ -484,6 +505,31 @@ get '/main/:t' do
 	$r.zadd 'online', Time.now.to_i.to_s, @user.id.to_s
 	
 	erb :main
+end
+
+# Расстояние в метрах
+get '/len_test' do 
+	url = 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Екатеринбург, Папанина 3'
+	url =  URI::encode(url)
+	
+	begin
+		uri = URI.parse(url)
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = true
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		http.open_timeout = 2 # in seconds
+		http.read_timeout = 2 # in seconds	
+		response = http.request(Net::HTTP::Get.new(uri.request_uri))
+		text = response.body
+		
+		# Разбираем json
+		point = JSON.parse text
+		
+		
+		
+	rescue Timeout::Error
+		return false
+	end
 end
 
 # Авторизация в игре с помощью кнопок соцсетей
