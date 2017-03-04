@@ -12,9 +12,9 @@ get '/login' do
 			type = params['type'].to_s
 			
 			if type == 'vk' then
-				redirect "http://oauth.vk.com/authorize?client_id=5027551&display=mobile&redirect_uri=http://cosmoslot.ru/vk_action&response_type=code"
+				redirect "http://oauth.vk.com/authorize?client_id=5027551&display=mobile&redirect_uri=http://vlast.mobi/vk_action&response_type=code"
 			elsif type == 'ok' then
-				redirect "http://www.odnoklassniki.ru/oauth/authorize?client_id=1148777472&response_type=code&redirect_uri=http://cosmoslot.ru/ok_action&layout=m&scope="
+				redirect "http://www.odnoklassniki.ru/oauth/authorize?client_id=1148777472&response_type=code&redirect_uri=http://vlast.mobi/ok_action&layout=m&scope="
 			else
 				redirect '/login'
 			end
@@ -36,7 +36,7 @@ get '/ok_action' do
 	if !params['error'].nil? then
 		redirect '/login'
 	elsif !params['code'].nil? then
-		uri = URI.parse('https://api.odnoklassniki.ru/oauth/token.do?code='+params['code'].to_s+'&client_id=1148777472&client_secret=629A26FCABF82B11FDDE1043&redirect_uri=http://cosmoslot.ru/ok_action&grant_type=authorization_code')
+		uri = URI.parse('https://api.odnoklassniki.ru/oauth/token.do?code='+params['code'].to_s+'&client_id=1148777472&client_secret=629A26FCABF82B11FDDE1043&redirect_uri=http://vlast.mobi/ok_action&grant_type=authorization_code')
 		http = Net::HTTP.new(uri.host, uri.port)
 		http.use_ssl = true
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -106,7 +106,7 @@ get '/vk_action' do
 	if !params['error'].nil? then
 		redirect '/login'
 	elsif !params['code'].nil? then
-		uri = URI.parse('https://oauth.vk.com/access_token?client_id=5027551&client_secret=PmzLqPcZwq4l40jTNlye&redirect_uri=http://cosmoslot.ru/vk_action&code='+params['code'].to_s)
+		uri = URI.parse('https://oauth.vk.com/access_token?client_id=5027551&client_secret=PmzLqPcZwq4l40jTNlye&redirect_uri=http://vlast.mobi/vk_action&code='+params['code'].to_s)
 		http = Net::HTTP.new(uri.host, uri.port)
 		http.use_ssl = true
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
