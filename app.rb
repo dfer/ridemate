@@ -507,6 +507,35 @@ get '/main/:t' do
 	erb :main
 end
 
+get '/next/:id' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['id'].nil?
+		redirect '/main/123'
+	end
+	
+	id = params['id'].to_i
+	
+	if id < 1 or id > 2
+		redirect '/main/123'
+	end
+	
+	if @user.step == 0
+		@user.step = 1
+		
+		if id == 1
+			@user.role = 0
+		elsif id == 2
+			@user.role = 1
+		end
+		
+		@user.save
+	end
+	
+	erb :main
+end
+
 # Расстояние в метрах
 get '/len_test' do 
 	url = 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Екатеринбург, Папанина 3'

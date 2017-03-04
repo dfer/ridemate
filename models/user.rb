@@ -37,9 +37,11 @@
 # to_x - координата 1 Конечной точки
 # to_y - координата 2 Конечной точки
 # image_url - аватарка из Социальной сети
+# role - роль в системе. 0-попутчик, 1-водитель
+# step - шаг в регистрации
 
 class User
-	attr_accessor :id, :login, :name, :from, :to, :from_time, :to_time, :day1, :day2, :day3, :day4, :day5, :day6, :day7, :model, :phone, :about, :datefrom, :dateaction, :trips, :exp, :smoke, :age, :sex, :social_userid, :social, :from_x, :from_y, :to_x, :to_y, :image_url
+	attr_accessor :id, :login, :name, :from, :to, :from_time, :to_time, :day1, :day2, :day3, :day4, :day5, :day6, :day7, :model, :phone, :about, :datefrom, :dateaction, :trips, :exp, :smoke, :age, :sex, :social_userid, :social, :from_x, :from_y, :to_x, :to_y, :image_url, :role, :step
 	attr_reader :password
 	
 	def password=(val)
@@ -53,7 +55,7 @@ class User
 		if !id.nil? and id.to_i > 0 then
 			@id = id.to_i
 			
-			hash = $r.hmget 'user:'+@id.to_s, 'login', 'name', 'from', 'to', 'from_time', 'to_time', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'model', 'phone', 'about', 'datefrom', 'dateaction', 'trips', 'exp', 'smoke', 'age', 'sex', 'social_userid', 'social', 'from_x', 'from_y', 'to_x', 'to_y', 'image_url'
+			hash = $r.hmget 'user:'+@id.to_s, 'login', 'name', 'from', 'to', 'from_time', 'to_time', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'model', 'phone', 'about', 'datefrom', 'dateaction', 'trips', 'exp', 'smoke', 'age', 'sex', 'social_userid', 'social', 'from_x', 'from_y', 'to_x', 'to_y', 'image_url', 'role', 'step'
 			
 			@login = hash[0]
 			@name = hash[1]
@@ -85,6 +87,8 @@ class User
 			@to_x = hash[27]
 			@to_y = hash[28]
 			@image_url = hash[29]
+			@role = hash[30].to_i
+			@step = hash[31].to_i
 		end
 	end
 	
@@ -155,7 +159,9 @@ class User
 		'from_y', @from_y, 
 		'to_x', @to_x, 
 		'to_y', @to_y,
-		'image_url', @image_url
+		'image_url', @image_url,
+		'role', @role.to_s,
+		'step', @step.to_s
 	end
 	
 	# Перенесем механизм сообщений из session['message'] в базу
