@@ -1490,15 +1490,35 @@
 			{label: "Яхтенная улица"}
 		];
 		
-		$( "#project" ).autocomplete({
+		$( "#project_from" ).autocomplete({
 			minLength: 0,
 			source: projects,
 			focus: function( event, ui ) {
-				$( "#project" ).val( ui.item.label );
+				$( "#project_from" ).val( ui.item.label );
 				return false;
 			},
 			select: function( event, ui ) {
-				$( "#project" ).val( ui.item.label );
+				$( "#project_from" ).val( ui.item.label );
+				//$( "#project-id" ).val( ui.item.value );
+				return false;
+			}
+		})
+		.data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li style='font-size:12px;'></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>" + item.label + "</a>" )
+				.appendTo( ul );
+		};
+		
+		$( "#project_to" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) {
+				$( "#project_to" ).val( ui.item.label );
+				return false;
+			},
+			select: function( event, ui ) {
+				$( "#project_to" ).val( ui.item.label );
 				//$( "#project-id" ).val( ui.item.value );
 				return false;
 			}
@@ -1523,7 +1543,7 @@
         <div class="form__title">Построить маршрут</div>
         <div class="form-group">
           <div class="label__title">Откуда *</div>
-          <input id="project" class="ui-autocomplete-input" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="from" style="width:100%;">
+          <input id="project_from" class="ui-autocomplete-input" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="from" style="width:100%;">
         </div>
         
         <div class="form-group">
@@ -1573,7 +1593,7 @@
         
         <div class="form-group">
           <div class="label__title">Куда *</div>
-          <input class="form-control" type="text" name="to" required="" placeholder="Нижняя Семеновская">
+          <input id="project_to" class="ui-autocomplete-input" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="to" style="width:100%;">
         </div>
         
         <div class="form-group">
