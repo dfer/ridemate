@@ -24,10 +24,10 @@ disable :protection
 helpers do
 	$r_new = Array.new
 	
-	$r_new[0] = Redis.new(:host=>"95.213.199.35", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
-	$r_new[1] = Redis.new(:host=>"95.213.199.35", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
-	$r_new[2] = Redis.new(:host=>"95.213.199.35", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
-	$r_new[3] = Redis.new(:host=>"95.213.199.35", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
+	$r_new[0] = Redis.new(:host=>"95.213.237.75", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
+	$r_new[1] = Redis.new(:host=>"95.213.237.75", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
+	$r_new[2] = Redis.new(:host=>"95.213.237.75", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
+	$r_new[3] = Redis.new(:host=>"95.213.237.75", :port=>"6441", :password=>'BSDr56dfghj3tdbjg5547yrdgHytrvb54e1')
 	
 	# Класс прослойка для работы с базой Redis
 	# Передаем параметры подключения к старой базе, чтобы можно было передать их родительскому классу
