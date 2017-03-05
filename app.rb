@@ -597,6 +597,8 @@ get '/users_map/:len' do
 		
 		userid_max = ($r.get 'userid').to_i
 		
+		center_x, center_y, count = 0, 0, 0
+		
 		for i in 3..userid_max do 
 			user = User.new(i)
 			if user.role == 0
@@ -605,8 +607,21 @@ get '/users_map/:len' do
 				
 				if len <= len_max
 					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+					count += 1
+					center_x += user.from_x
+					center_y += user.from_y
 				end
 			end
+		end
+		
+		# Вычисляем центр
+		if count > 0 
+			@center_x = center_x / count
+			@center_y = center_y / count
+		else
+			# Санкт-Петербург, Дворцовая площадь
+			@center_x = 59.938942
+			@center_y = 30.314987
 		end
 	end
 	

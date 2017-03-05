@@ -10,16 +10,20 @@
 
         function init(){ 
             myMap = new ymaps.Map("map", {
-                center: [56.84, 60.57],
+                center: [<%= @center_x.to_x+', '+@center_y.to_s %>],
                 zoom: 13
             }); 
             
-            myPlacemark = new ymaps.Placemark([56.845501, 60.574689], {
-                hintContent: 'Москва!',
-                balloonContent: 'Столица России'
-            });
+            <% for i in 0..@array.size-1 do %>
+                <% user = @array[i] %>
+                
+                myPlacemark = new ymaps.Placemark([<%= user[:from_x].to_s+', '+user[:from_y].to_s %>], {
+                    hintContent: '<%= user[:name] %>',
+                    balloonContent: 'Поедет: <%= user[:to] %> в <%= user[:from_time] %>'
+                });
             
-            myMap.geoObjects.add(myPlacemark);
+                myMap.geoObjects.add(myPlacemark);
+            <% end %>
         }
     </script>
 </head>
