@@ -11,7 +11,7 @@
         function init(){ 
             myMap = new ymaps.Map("map", {
                 center: [<%= @center_x.to_s+', '+@center_y.to_s %>],
-                zoom: 13
+                zoom: <%= @zoom.to_s %>
             }); 
             
             <% for i in 0..@array.size-1 do %>
@@ -30,6 +30,7 @@
 </head>
 
 <body>
+    <div><%= @title %></div>
     <div id="map" style="width: 600px; height: 400px"></div>
 </body>
 

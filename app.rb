@@ -593,6 +593,17 @@ get '/users_map/:len' do
 	
 	# Поиск водителей поблизости
 	if @user.step == 3 and @user.role == 1
+		@title = 'Попутчики рядом'
+		
+		# На сколько приближать
+		if len == 1
+			@zoom = 13
+		elsif len == 2
+			@zoom = 12
+		elsif len == 3
+			@zoom = 11
+		end
+		
 		@array = []
 		
 		userid_max = ($r.get 'userid').to_i
