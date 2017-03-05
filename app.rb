@@ -639,6 +639,8 @@ post '/about_me' do
 		
 		redirect '/main/456'
 	end
+end
+
 # Расстояние в метрах
 get '/len_test' do 
 	url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, Медиков проспект, 5')
