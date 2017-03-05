@@ -6,7 +6,7 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script type="text/javascript">
         ymaps.ready(init);
-        var myMap, myPlacemark;
+        var myMap;
 
         function init(){ 
             myMap = new ymaps.Map("map", {
@@ -17,6 +17,7 @@
             <% for i in 0..@array.size-1 do %>
                 <% user = @array[i] %>
                 
+                var myPlacemark;
                 myPlacemark = new ymaps.Placemark([<%= user[:from_y].to_s+', '+user[:from_x].to_s %>], {
                     hintContent: '<%= user[:name] %>',
                     balloonContent: 'Поедет: <%= user[:to] %> в <%= user[:from_time] %>'
