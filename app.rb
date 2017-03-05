@@ -738,7 +738,7 @@ post '/trip' do
 	write_log('to_time_hour: '+params['to_time_hour'])
 	write_log('to_time_min: '+params['to_time_min'])
 	
-	if params['from'].nil? or params['from_time_hour'].nil? or params['from_time_min'].nil? or params['to'].nil? or params['to_time_hour'].nil? or params['to_time_min'].nil?
+	if params['from'].nil? or params['from'] == '' or params['from_time_hour'].nil? or params['from_time_min'].nil? or params['to'].nil? or params['to']=='' or params['to_time_hour'].nil? or params['to_time_min'].nil?
 		redirect '/main/123'
 	else
 		# Находим координаты адресов, которые предоставил пользователь
