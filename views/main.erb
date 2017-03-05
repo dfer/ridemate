@@ -1552,7 +1552,7 @@
 				return false;
 			},
 			select: function( event, ui ) {
-				$( "#project_from" ).val( ui.item.label );
+				$( "#project_from" ).val( ui.item.label+', ');
 				//$( "#project-id" ).val( ui.item.value );
 				return false;
 			}
@@ -1690,7 +1690,7 @@
       
     <div class="form__box">
         <div class="form-group form-btn">
-          <button class="send-btn" type="submit">Далее</button>
+          <button type="submit">Далее</button>
         </div>
     </div>
   </form>
