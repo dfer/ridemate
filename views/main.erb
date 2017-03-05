@@ -114,7 +114,7 @@
 	    	
 	    	<img src="<%= user[:image_url] %>"><br>
 	    	<%= user[:name]+' ('+user[:model]+')<br>'+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
-	    	<%= 'Поездок: '+user[:trips].to_s+' шт., Стаж вождения: '+user[:exp_text]+', Курит: '+smoke_text+'<br>' %>
+	    	<%= 'Поездок: '+user[:trips].to_s+' шт., Стаж вождения: '+user[:exp_text]+', Курит: '+user[:smoke_text]+'<br>' %>
 	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
 	    <% end %>
     </div>
