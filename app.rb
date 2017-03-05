@@ -560,7 +560,7 @@ get '/users_map/:len' do
 	
 	# Поиск водителей поблизости
 	if @user.step == 3 and @user.role == 1
-		@title = 'Попутчики рядом'
+		@title = 'Попутчики рядом ('+params['len'].to_s+' км.)'
 		
 		# На сколько приближать
 		if len_max == 1000
@@ -666,7 +666,7 @@ get '/cars_map/:len' do
 	
 	# Поиск водителей поблизости
 	if @user.step == 2 and @user.role == 0
-		@title = 'Водители рядом'
+		@title = 'Водители рядом ('+params['len'].to_s+' км.)'
 		
 		# На сколько приближать
 		if len_max == 1000
