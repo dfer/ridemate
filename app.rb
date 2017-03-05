@@ -504,6 +504,25 @@ get '/main/:t' do
 	# Отмечаем, что игрок онлайн
 	$r.zadd 'online', Time.now.to_i.to_s, @user.id.to_s
 	
+	# Поиск водителей поблизости в радиусе 3х км
+	if @user.step == 2 and @user.role == 0
+		redirect '/cars/3'
+	end
+	
+	erb :main
+end
+
+# Список водителей рядом с пользователем. len-км от пользователя
+get '/cars/:len' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['len'].nil?
+		redirect '/main/123'
+	end
+	
+	len_max = params['len'].to_i * 1000
+	
 	# Поиск водителей поблизости
 	if @user.step == 2 and @user.role == 0
 		@array = []
@@ -516,7 +535,9 @@ get '/main/:t' do
 				# Вычисление расстояния между водителями и пользователем
 				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
 				
-				@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+				if len <= len_max
+					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+				end
 			end
 		end
 	end
