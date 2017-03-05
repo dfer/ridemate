@@ -1,20 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
     <title>Ridemate</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/bundle.min.js"></script>
-  </head>
-  <body>
-    <div class="header">
-      <div class="container">
-        <div class="header__title">Ridemate</div>
-        <div class="header__discription">Сервис для поиска попутчиков</div>
-      </div>
-    </div>
-    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script type="text/javascript">
         ymaps.ready(init);
@@ -41,7 +29,9 @@
     </script>
 </head>
 
-    <center><div style="font-size:16px;"><%= @title %></div>
-    <div id="map" style="width: 600px; height: 400px"></div></center>
+<body>
+    <center><div style="font-size:16px;"><%= @title %></div></center>
+    <div id="map" style="width: 600px; height: 400px"></div>
 </body>
+
 </html>
