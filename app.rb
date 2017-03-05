@@ -580,6 +580,39 @@ get '/users/:len' do
 	erb :main
 end
 
+# Список попутчиков рядом с пользователем. len-км от пользователя
+get '/users_map/:len' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['len'].nil?
+		redirect '/main/123'
+	end
+	
+	len_max = params['len'].to_i * 1000
+	
+	# Поиск водителей поблизости
+	if @user.step == 3 and @user.role == 1
+		@array = []
+		
+		userid_max = ($r.get 'userid').to_i
+		
+		for i in 3..userid_max do 
+			user = User.new(i)
+			if user.role == 0
+				# Вычисление расстояния между водителями и пользователем
+				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
+				
+				if len <= len_max
+					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+				end
+			end
+		end
+	end
+	
+	erb :map
+end
+
 get '/next/:id' do
 	redirect '/login' if session['user_id']=='' || session['user_id']==nil
 	@user = User.new(session['user_id'])

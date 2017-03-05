@@ -23,7 +23,7 @@ get '/login' do
 end
 
 # Выход для меня. Для тестирования игры
-get '/logout321' do
+get '/logout' do
 	redirect '/login' if session['user_id']=='' || session['user_id']==nil
 	@user = User.new(session['user_id'])
 	
