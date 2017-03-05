@@ -639,12 +639,14 @@ get '/cars/:len' do
 					smoke_text = 'Да'
 				end
 				
-				if user.exp == 0
+				if user.exp == 1
 					exp_text = 'Менее 3-х лет'
-				elsif user.exp == 1
-					exp_text = 'От 3 до 7 лет'
 				elsif user.exp == 2
+					exp_text = 'От 3 до 7 лет'
+				elsif user.exp == 3
 					exp_text = 'Более 7 лет'
+				else 
+					exp_text = 'Менее 3-х лет'
 				end
 				
 				if len <= len_max
