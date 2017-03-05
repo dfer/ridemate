@@ -596,11 +596,11 @@ get '/users_map/:len' do
 		@title = 'Попутчики рядом'
 		
 		# На сколько приближать
-		if len == 1
+		if len_max == 1000
 			@zoom = 13
-		elsif len == 2
+		elsif len_max == 2000
 			@zoom = 12
-		elsif len == 3
+		elsif len_max == 3000
 			@zoom = 11
 		end
 		
