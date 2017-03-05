@@ -542,6 +542,8 @@ get '/users/:len' do
 				end
 			end
 		end
+	else
+		redirect '/main/123'
 	end
 	
 	erb :main
@@ -601,6 +603,8 @@ get '/users_map/:len' do
 			@center_x = 59.938942
 			@center_y = 30.314987
 		end
+	else
+		redirect '/main/123'
 	end
 	
 	erb :map
@@ -648,6 +652,8 @@ get '/cars/:len' do
 				end
 			end
 		end
+	else
+		redirect '/main/123'
 	end
 	
 	erb :main
@@ -707,6 +713,8 @@ get '/cars_map/:len' do
 			@center_x = 59.938942
 			@center_y = 30.314987
 		end
+	else
+		redirect '/main/123'
 	end
 	
 	erb :map
