@@ -10,7 +10,7 @@
 
         function init(){ 
             myMap = new ymaps.Map("map", {
-                center: [<%= @center_x.to_x+', '+@center_y.to_s %>],
+                center: [<%= @center_x.to_s+', '+@center_y.to_s %>],
                 zoom: 13
             }); 
             
