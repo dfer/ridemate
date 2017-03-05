@@ -90,7 +90,8 @@
     <% for i in 0..@array.size-1 do %>
     	<% user = @array[i] %>
     	
-    	<%= user[:name]+' '+user[:from]+' '+user[:to] %>
+    	<%= user[:name]+' ('+user[:model]+') '+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time] %>
+    	<%= 'Координаты: '+user[:from_x]+', '+user[:from_y]+' - '+user[:to_x]+', '+user[:to_y] %>
     <% end %>
   <% elsif @user.step == 1 %>
   	<link rel="stylesheet" href="/themes/base/jquery.ui.all.css">

@@ -513,7 +513,7 @@ get '/main/:t' do
 		for i in 1..userid_max do 
 			user = User.new(i)
 			if user.role == 1
-				@array << {:id=>user.id, :name=>user.name, :from=>user.from, :to=>user.to}
+				@array << {:id=>user.id, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
 			end
 		end
 	end
