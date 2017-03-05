@@ -507,6 +507,8 @@ get '/main/:t' do
 	# Поиск водителей поблизости в радиусе 3х км
 	if @user.step == 2 and @user.role == 0
 		redirect '/cars/3'
+	elsif @user.step == 3 and @user.role == 1
+		redirect '/users/3'
 	end
 	
 	erb :main
@@ -537,6 +539,39 @@ get '/cars/:len' do
 				
 				if len <= len_max
 					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+				end
+			end
+		end
+	end
+	
+	erb :main
+end
+
+# Список попутчиков рядом с пользователем. len-км от пользователя
+get '/users/:len' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['len'].nil?
+		redirect '/main/123'
+	end
+	
+	len_max = params['len'].to_i * 1000
+	
+	# Поиск водителей поблизости
+	if @user.step == 3 and @user.role == 1
+		@array = []
+		
+		userid_max = ($r.get 'userid').to_i
+		
+		for i in 3..userid_max do 
+			user = User.new(i)
+			if user.role == 0
+				# Вычисление расстояния между водителями и пользователем
+				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
+				
+				if len <= len_max
+					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
 				end
 			end
 		end
@@ -2195,8 +2230,8 @@ def streets
 	return name[rand(name.size)]
 end
 
-# Добавление тестовых пользователей
-get '/users_add/:count' do 
+# Добавление тестовых водителей
+get '/cars_add/:count' do 
 	if !params['count'].nil?
 		for i in 1..params['count'].to_i do
 			age = rand(10)+17
@@ -2280,7 +2315,94 @@ get '/users_add/:count' do
 			user.smoke = rand(2)
 			user.exp = rand(3)+1
 			user.trips = rand(20)
-			user.step = 3
+			
+			user.save
+		end
+		
+		'ok'
+	else
+		redirect '/main/124'
+	end
+end
+
+# Добавление тестовых попутчиков
+get '/users_add/:count' do 
+	if !params['count'].nil?
+		for i in 1..params['count'].to_i do
+			age = rand(10)+17
+			
+			if i % 2 == 0
+				nickname = male_name
+				sex = '0' # мужчина
+				image = 'https://static.pasha.pw/logist/game_garage/mans/'+rand(8).to_s+'_0.png'
+			else
+				nickname = female_name
+				sex = '1'
+				image = 'https://static.pasha.pw/logist/game_garage/girls/'+rand(14).to_s+'_0.png'
+			end
+			
+			user = User.new
+			user_hash = {:nickname =>nickname, :age=>age.to_s, :sex=>sex, :image_url=>image}
+			id = user.create(user_hash)
+			user = User.new(id)
+			user.role = 0
+			user.step = 2
+			
+			user.from = streets+', '+(rand(10)+1).to_s
+			user.to = streets+', '+(rand(10)+1).to_s
+			
+			# Находим координаты адресов, которые предоставил пользователь
+			url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.from)
+		
+			begin
+				uri = URI.parse(url)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
+				http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+				http.open_timeout = 2 # in seconds
+				http.read_timeout = 2 # in seconds	
+				response = http.request(Net::HTTP::Get.new(uri.request_uri))
+				text = response.body
+				
+				# Разбираем json
+				json_text = JSON.parse text
+				# 30.314548 59.969547
+				from_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+			rescue Timeout::Error
+				return false
+			end
+			
+			# Находим координаты адресов, которые предоставил пользователь
+			url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.to)
+		
+			begin
+				uri = URI.parse(url)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
+				http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+				http.open_timeout = 2 # in seconds
+				http.read_timeout = 2 # in seconds	
+				response = http.request(Net::HTTP::Get.new(uri.request_uri))
+				text = response.body
+				
+				# Разбираем json
+				json_text = JSON.parse text
+				# 30.314548 59.969547
+				to_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+			rescue Timeout::Error
+				return false
+			end
+			
+			user.from_time = '0'+(rand(3)+7).to_s+':00'
+			user.to_time = (rand(3)+18).to_s+':00'
+			
+			array = from_xy.split(' ')
+			user.from_x = array[0]
+			user.from_y = array[1]
+			
+			array = to_xy.split(' ')
+			user.to_x = array[0]
+			user.to_y = array[1]
 			
 			user.save
 		end

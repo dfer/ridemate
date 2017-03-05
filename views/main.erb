@@ -72,9 +72,24 @@
     </div>
     <form class="container validate" id="result">
       <div class="form__box">
-      	<div class="form__title">Здесь будет список попутчиков, которые живут рядом с вами</div>
+      	<div class="form__title">Попутчики, которые живут рядом с вами</div>
       </div>
     </form>
+    <div style="font-size:12px;">
+    	<a href="/users/1">В радиусе 1 км</a><br>
+    	<a href="/users/2">В радиусе 2 км</a><br>
+    	<a href="/users/3">В радиусе 3 км</a><br>
+    	<br>
+    	
+	    <% for i in 0..@array.size-1 do %>
+	    	<% user = @array[i] %>
+	    	
+	    	<img src="<%= user[:image_url] %>"><br>
+	    	<%= user[:name]+' '+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
+	    	<%= 'Координаты: '+user[:from_x]+', '+user[:from_y]+' - '+user[:to_x]+', '+user[:to_y]+'<br>' %>
+	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
+	    <% end %>
+    </div>
   <% elsif @user.step == 2 and @user.role == 0 %>
   	 <div class="header">
       <div class="container">
@@ -84,13 +99,13 @@
     </div>
     <form class="container validate" id="result">
       <div class="form__box">
-      	<div class="form__title">Cписок водителей, которые живут рядом с вами</div>
+      	<div class="form__title">Водители, которые живут рядом с вами</div>
       </div>
     </form>
     <div style="font-size:12px;">
     	<a href="/cars/1">В радиусе 1 км</a><br>
     	<a href="/cars/2">В радиусе 2 км</a><br>
-    	<a href="/cars/3">В радиусе 3 ки</a><br>
+    	<a href="/cars/3">В радиусе 3 км</a><br>
     	<br>
     	
 	    <% for i in 0..@array.size-1 do %>
