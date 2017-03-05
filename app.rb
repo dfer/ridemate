@@ -504,6 +504,20 @@ get '/main/:t' do
 	# Отмечаем, что игрок онлайн
 	$r.zadd 'online', Time.now.to_i.to_s, @user.id.to_s
 	
+	# Поиск водителей поблизости
+	if @user.step == 2 and @user.role == 0
+		@array = []
+		
+		userid_max = ($r.get 'userid').to_i
+		
+		for i in 1..userid_max do 
+			user = User.new(i)
+			if user.role == 1
+				@array << {:id=>user.id, :name=>user.name, :from=>user.from, :to=>user.to}
+			end
+		end
+	end
+	
 	erb :main
 end
 

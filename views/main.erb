@@ -87,6 +87,11 @@
       	<div class="form__title">Здесь будет список водителей, которые живут рядом с вами</div>
       </div>
     </form>
+    <% for i in 0..@array.size-1 do %>
+    	<% user = @array[i] %>
+    	
+    	<%= user[:name]+' '+user[:from]+' '+user[:to] %>
+    <% end %>
   <% elsif @user.step == 1 %>
   	<link rel="stylesheet" href="/themes/base/jquery.ui.all.css">
 	<script src="/jquery-1.7.1.js"></script>
