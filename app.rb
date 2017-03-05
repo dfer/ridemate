@@ -608,8 +608,8 @@ get '/users_map/:len' do
 				if len <= len_max
 					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
 					count += 1
-					center_x += user.from_x.to_f
-					center_y += user.from_y.to_f
+					center_x += user.from_y.to_f
+					center_y += user.from_x.to_f
 				end
 			end
 		end

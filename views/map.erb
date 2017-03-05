@@ -17,7 +17,7 @@
             <% for i in 0..@array.size-1 do %>
                 <% user = @array[i] %>
                 
-                myPlacemark = new ymaps.Placemark([<%= user[:from_x].to_s+', '+user[:from_y].to_s %>], {
+                myPlacemark = new ymaps.Placemark([<%= user[:from_y].to_s+', '+user[:from_x].to_s %>], {
                     hintContent: '<%= user[:name] %>',
                     balloonContent: 'Поедет: <%= user[:to] %> в <%= user[:from_time] %>'
                 });
