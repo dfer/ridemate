@@ -514,39 +514,6 @@ get '/main/:t' do
 	erb :main
 end
 
-# Список водителей рядом с пользователем. len-км от пользователя
-get '/cars/:len' do
-	redirect '/login' if session['user_id']=='' || session['user_id']==nil
-	@user = User.new(session['user_id'])
-	
-	if params['len'].nil?
-		redirect '/main/123'
-	end
-	
-	len_max = params['len'].to_i * 1000
-	
-	# Поиск водителей поблизости
-	if @user.step == 2 and @user.role == 0
-		@array = []
-		
-		userid_max = ($r.get 'userid').to_i
-		
-		for i in 3..userid_max do 
-			user = User.new(i)
-			if user.role == 1
-				# Вычисление расстояния между водителями и пользователем
-				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
-				
-				if len <= len_max
-					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
-				end
-			end
-		end
-	end
-	
-	erb :main
-end
-
 # Список попутчиков рядом с пользователем. len-км от пользователя
 get '/users/:len' do
 	redirect '/login' if session['user_id']=='' || session['user_id']==nil
@@ -637,6 +604,53 @@ get '/users_map/:len' do
 	end
 	
 	erb :map
+end
+
+# Список водителей рядом с пользователем. len-км от пользователя
+get '/cars/:len' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['len'].nil?
+		redirect '/main/123'
+	end
+	
+	len_max = params['len'].to_i * 1000
+	
+	# Поиск водителей поблизости
+	if @user.step == 2 and @user.role == 0
+		@array = []
+		
+		userid_max = ($r.get 'userid').to_i
+		
+		for i in 3..userid_max do 
+			user = User.new(i)
+			if user.role == 1
+				# Вычисление расстояния между водителями и пользователем
+				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
+				
+				if user.smoke == 0
+					smoke_text = 'Нет'
+				elsif user.smoke == 1
+					smoke_text = 'Да'
+				end
+				
+				if user.exp == 0
+					exp_text = 'Менее 3-х лет'
+				elsif user.exp == 1
+					exp_text = 'От 3 до 7 лет'
+				elsif user.exp == 2
+					exp_text = 'Более 7 лет'
+				end
+				
+				if len <= len_max
+					@array << {:len=>len, :id=>user.id, :exp_text=>exp_text, :trips=>user.trips, :smoke_text=>smoke_text, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+				end
+			end
+		end
+	end
+	
+	erb :main
 end
 
 # Список попутчиков рядом с пользователем. len-км от пользователя

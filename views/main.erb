@@ -44,7 +44,7 @@
         <div class="form-group">
           <div class="label__title">Стаж вождения:</div>
 			<select name="exp">
-					<option value="1">менее 3-х лет</option>
+					<option value="1">Менее 3-х лет</option>
 					<option value="2">От 3 до 7 лет</option>
 					<option value="3">Более 7 лет</option>
 			</select>          
@@ -76,19 +76,20 @@
       </div>
     </form>
     <div style="font-size:12px;">
-    	<a href="/users/1">В радиусе 1 км</a> | <a href="/users_map/1">Посмотреть на карте</a><br>
-    	<a href="/users/2">В радиусе 2 км</a> | <a href="/users_map/2">Посмотреть на карте</a><br>
-    	<a href="/users/3">В радиусе 3 км</a> | <a href="/users_map/3">Посмотреть на карте</a><br>
-    	<br>
-    	
-	    <% for i in 0..@array.size-1 do %>
-	    	<% user = @array[i] %>
+    	<center>
+	    	<a href="/users/1">В радиусе 1 км</a> | <a href="/users_map/1">Посмотреть на карте</a><br>
+	    	<a href="/users/2">В радиусе 2 км</a> | <a href="/users_map/2">Посмотреть на карте</a><br>
+	    	<a href="/users/3">В радиусе 3 км</a> | <a href="/users_map/3">Посмотреть на карте</a><br>
+	    	<br>
 	    	
-	    	<img src="<%= user[:image_url] %>"><br>
-	    	<%= user[:name]+' '+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
-	    	<%= 'Координаты: '+user[:from_x]+', '+user[:from_y]+' - '+user[:to_x]+', '+user[:to_y]+'<br>' %>
-	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
-	    <% end %>
+		    <% for i in 0..@array.size-1 do %>
+		    	<% user = @array[i] %>
+		    	
+		    	<img src="<%= user[:image_url] %>"><br>
+		    	<%= user[:name]+'<br>'+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
+		    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
+		    <% end %>
+	    </center>
     </div>
   <% elsif @user.step == 2 and @user.role == 0 %>
   	 <div class="header">
@@ -112,8 +113,8 @@
 	    	<% user = @array[i] %>
 	    	
 	    	<img src="<%= user[:image_url] %>"><br>
-	    	<%= user[:name]+' ('+user[:model]+') '+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
-	    	<%= 'Координаты: '+user[:from_x]+', '+user[:from_y]+' - '+user[:to_x]+', '+user[:to_y]+'<br>' %>
+	    	<%= user[:name]+' ('+user[:model]+')<br>'+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
+	    	<%= 'Поездок: '+user[:trips].to_s+' шт., Стаж вождения: '+exp_text+', Курит: '+smoke_text+'<br>' %>
 	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
 	    <% end %>
     </div>
