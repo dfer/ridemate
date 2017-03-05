@@ -540,6 +540,13 @@ post '/trip' do
 	redirect '/login' if session['user_id']=='' || session['user_id']==nil
 	@user = User.new(session['user_id'])
 	
+	write_log('from: '+params['from'])
+	write_log('from_time_hour: '+params['from_time_hour'])
+	write_log('from_time_min: '+params['from_time_min'])
+	write_log('to: '+params['to'])
+	write_log('to_time_hour: '+params['to_time_hour'])
+	write_log('to_time_min: '+params['to_time_min'])
+	
 	if !params['from'].nil? and !params['from_time_hour'].nil? and !params['from_time_min'].nil? and !params['to'].nil? and !params['to_time_hour'].nil? and !params['to_time_min'].nil?
 		redirect '/main/123'
 	else
