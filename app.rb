@@ -628,7 +628,7 @@ post '/about_me' do
 		redirect '/main/123'
 	else
 		if @user.step == 2 and @user.role == 1
-			@user.car = params['car']
+			@user.model = params['car']
 			@user.smoke = params['smoke']
 			@user.exp = params['exp']
 			@user.about = params['about']
