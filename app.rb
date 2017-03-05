@@ -2175,95 +2175,99 @@ def streets
 end
 
 # Добавление тестовых пользователей
-get '/users_add' do 
-	for i in 1..10 do
-		age = rand(10)+17
-		
-		if i % 2 == 0
-			nickname = male_name
-			sex = '0' # мужчина
-			image = 'https://static.pasha.pw/logist/game_garage/mans/'+rand(8).to_s+'_0.png'
-		else
-			nickname = female_name
-			sex = '1'
-			image = 'https://static.pasha.pw/logist/game_garage/girls/'+rand(14).to_s+'_0.png'
-		end
-		
-		user = User.new
-		user_hash = {:nickname =>nickname, :age=>age.to_s, :sex=>sex, :image_url=>image}
-		id = user.create(user_hash)
-		user = User.new(id)
-		user.role = 1
-		user.step = 3
-		
-		user.from = streets+', '+(rand(10)+1).to_s
-		user.to = streets+', '+(rand(10)+1).to_s
-		
-		# Находим координаты адресов, которые предоставил пользователь
-		url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.from)
-	
-		begin
-			uri = URI.parse(url)
-			http = Net::HTTP.new(uri.host, uri.port)
-			http.use_ssl = true
-			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-			http.open_timeout = 2 # in seconds
-			http.read_timeout = 2 # in seconds	
-			response = http.request(Net::HTTP::Get.new(uri.request_uri))
-			text = response.body
+get '/users_add/:count' do 
+	if !params['count'].nil?
+		for i in 1..params['count'].to_i do
+			age = rand(10)+17
 			
-			# Разбираем json
-			json_text = JSON.parse text
-			# 30.314548 59.969547
-			from_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
-		rescue Timeout::Error
-			return false
-		end
-		
-		# Находим координаты адресов, которые предоставил пользователь
-		url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.to)
-	
-		begin
-			uri = URI.parse(url)
-			http = Net::HTTP.new(uri.host, uri.port)
-			http.use_ssl = true
-			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-			http.open_timeout = 2 # in seconds
-			http.read_timeout = 2 # in seconds	
-			response = http.request(Net::HTTP::Get.new(uri.request_uri))
-			text = response.body
+			if i % 2 == 0
+				nickname = male_name
+				sex = '0' # мужчина
+				image = 'https://static.pasha.pw/logist/game_garage/mans/'+rand(8).to_s+'_0.png'
+			else
+				nickname = female_name
+				sex = '1'
+				image = 'https://static.pasha.pw/logist/game_garage/girls/'+rand(14).to_s+'_0.png'
+			end
 			
-			# Разбираем json
-			json_text = JSON.parse text
-			# 30.314548 59.969547
-			to_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
-		rescue Timeout::Error
-			return false
-		end
+			user = User.new
+			user_hash = {:nickname =>nickname, :age=>age.to_s, :sex=>sex, :image_url=>image}
+			id = user.create(user_hash)
+			user = User.new(id)
+			user.role = 1
+			user.step = 3
+			
+			user.from = streets+', '+(rand(10)+1).to_s
+			user.to = streets+', '+(rand(10)+1).to_s
+			
+			# Находим координаты адресов, которые предоставил пользователь
+			url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.from)
 		
-		user.from_time = '0'+(rand(3)+7).to_s+':00'
-		user.to_time = (rand(3)+18).to_s+':00'
-		
-		array = from_xy.split(' ')
-		user.from_x = array[0]
-		user.from_y = array[1]
-		
-		array = to_xy.split(' ')
-		user.to_x = array[0]
-		user.to_y = array[1]
-		
-		cars = ['Форд', 'БМВ', 'Ауди', 'Шкода', 'Киа', 'Рено', 'Ваз', 'Шевроле', 'Трактор']
+			begin
+				uri = URI.parse(url)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
+				http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+				http.open_timeout = 2 # in seconds
+				http.read_timeout = 2 # in seconds	
+				response = http.request(Net::HTTP::Get.new(uri.request_uri))
+				text = response.body
 				
-		user.model = cars[rand(cars.size)]
-		user.smoke = rand(2)
-		user.exp = rand(3)+1
-		user.trips = rand(20)
-		user.step = 3
+				# Разбираем json
+				json_text = JSON.parse text
+				# 30.314548 59.969547
+				from_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+			rescue Timeout::Error
+				return false
+			end
+			
+			# Находим координаты адресов, которые предоставил пользователь
+			url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+user.to)
 		
-		user.save
+			begin
+				uri = URI.parse(url)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
+				http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+				http.open_timeout = 2 # in seconds
+				http.read_timeout = 2 # in seconds	
+				response = http.request(Net::HTTP::Get.new(uri.request_uri))
+				text = response.body
+				
+				# Разбираем json
+				json_text = JSON.parse text
+				# 30.314548 59.969547
+				to_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+			rescue Timeout::Error
+				return false
+			end
+			
+			user.from_time = '0'+(rand(3)+7).to_s+':00'
+			user.to_time = (rand(3)+18).to_s+':00'
+			
+			array = from_xy.split(' ')
+			user.from_x = array[0]
+			user.from_y = array[1]
+			
+			array = to_xy.split(' ')
+			user.to_x = array[0]
+			user.to_y = array[1]
+			
+			cars = ['Форд', 'БМВ', 'Ауди', 'Шкода', 'Киа', 'Рено', 'Ваз', 'Шевроле']
+					
+			user.model = cars[rand(cars.size)]
+			user.smoke = rand(2)
+			user.exp = rand(3)+1
+			user.trips = rand(20)
+			user.step = 3
+			
+			user.save
+		end
+		
+		'ok'
+	else
+		redirect '/main/124'
 	end
-	
-	'ok'
 end
 
 # Авторизация в игре с помощью кнопок соцсетей
