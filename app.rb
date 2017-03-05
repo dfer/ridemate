@@ -514,7 +514,7 @@ get '/main/:t' do
 			user = User.new(i)
 			if user.role == 1
 				# Вычисление расстояния между водителями и пользователем
-				len = haversine_distance(@user.from_x.to_i, @user.from_y.to_i, user.from_x.to_i, user.from_y.to_i)
+				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
 				
 				@array << {:len=>len, :id=>user.id, :name=>user.name, :from=>user.from, :to=>user.to, :model=>user.model, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
 			end
