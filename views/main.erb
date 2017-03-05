@@ -94,7 +94,7 @@
 	    	<img src="<%= user[:image_url] %>"><br>
 	    	<%= user[:name]+' ('+user[:model]+') '+user[:from]+' '+user[:from_time]+' -> '+user[:to]+' '+user[:to_time]+'<br>' %>
 	    	<%= 'Координаты: '+user[:from_x]+', '+user[:from_y]+' - '+user[:to_x]+', '+user[:to_y]+'<br>' %>
-	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %>
+	    	<%= 'Расстояние: '+user[:len].to_s+' метров' %><br><br>
 	    <% end %>
     </div>
   <% elsif @user.step == 1 %>

@@ -510,7 +510,7 @@ get '/main/:t' do
 		
 		userid_max = ($r.get 'userid').to_i
 		
-		for i in 1..userid_max do 
+		for i in 3..userid_max do 
 			user = User.new(i)
 			if user.role == 1
 				# Вычисление расстояния между водителями и пользователем
