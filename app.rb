@@ -609,9 +609,36 @@ post '/trip' do
 		@user.step = 2
 		
 		@user.save
+		
+		redirect '/main/456'
 	end
 end
 
+# Вторая форма для регистрации водителя
+post '/about_me' do 
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	write_log('car: '+params['car'])
+	write_log('smoke: '+params['smoke'])
+	write_log('exp: '+params['exp'])
+	write_log('about: '+params['about'])
+	
+	if params['car'].nil? or params['smoke'].nil? or params['exp'].nil? or params['about'].nil?
+		redirect '/main/123'
+	else
+		if @user.step == 2 and @user.role == 1
+			@user.car = params['car']
+			@user.smoke = params['smoke']
+			@user.exp = params['exp']
+			@user.about = params['about']
+			@user.step = 3
+			
+			@user.save
+		end
+		
+		redirect '/main/456'
+	end
 # Расстояние в метрах
 get '/len_test' do 
 	url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, Медиков проспект, 5')
