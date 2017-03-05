@@ -597,11 +597,11 @@ get '/users_map/:len' do
 		
 		# На сколько приближать
 		if len_max == 1000
-			@zoom = 13
+			@zoom = 14
 		elsif len_max == 2000
-			@zoom = 12
+			@zoom = 13
 		elsif len_max == 3000
-			@zoom = 11
+			@zoom = 12
 		end
 		
 		@array = []
@@ -613,6 +613,65 @@ get '/users_map/:len' do
 		for i in 3..userid_max do 
 			user = User.new(i)
 			if user.role == 0
+				# Вычисление расстояния между водителями и пользователем
+				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
+				
+				if len <= len_max
+					@array << {:len=>len, :id=>user.id, :image_url=>user.image_url, :name=>user.name, :from=>user.from, :to=>user.to, :from_time=>user.from_time, :to_time=>user.to_time, :from_x=>user.from_x, :from_y=>user.from_y, :to_x=>user.to_x, :to_y=>user.to_y}
+					count += 1
+					center_x += user.from_y.to_f
+					center_y += user.from_x.to_f
+				end
+			end
+		end
+		
+		# Вычисляем центр
+		if count > 0 
+			@center_x = center_x / count
+			@center_y = center_y / count
+		else
+			# Санкт-Петербург, Дворцовая площадь
+			@center_x = 59.938942
+			@center_y = 30.314987
+		end
+	end
+	
+	erb :map
+end
+
+# Список попутчиков рядом с пользователем. len-км от пользователя
+get '/cars_map/:len' do
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if params['len'].nil?
+		redirect '/main/123'
+	end
+	
+	len_max = params['len'].to_i * 1000
+	
+	# Поиск водителей поблизости
+	if @user.step == 2 and @user.role == 0
+		@title = 'Водители рядом'
+		
+		# На сколько приближать
+		if len_max == 1000
+			@zoom = 14
+		elsif len_max == 2000
+			@zoom = 13
+		elsif len_max == 3000
+			@zoom = 12
+		end
+		
+		@array = []
+		
+		userid_max = ($r.get 'userid').to_i
+		
+		center_x, center_y, count = 0, 0, 0
+		
+		for i in 3..userid_max do 
+			user = User.new(i)
+			if user.role == 1
 				# Вычисление расстояния между водителями и пользователем
 				len = haversine_distance(@user.from_x.to_f, @user.from_y.to_f, user.from_x.to_f, user.from_y.to_f)
 				
