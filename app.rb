@@ -536,10 +536,78 @@ get '/next/:id' do
 	erb :main
 end
 
+post '/trip' do 
+	redirect '/login' if session['user_id']=='' || session['user_id']==nil
+	@user = User.new(session['user_id'])
+	
+	if !params['from'].nil? and !params['from_time_hour'].nil? and !params['from_time_min'].nil? and !params['to'].nil? and !params['to_time_hour'].nil? and !params['to_time_min'].nil?
+		redirect '/main/123'
+	else
+		# Находим координаты адресов, которые предоставил пользователь
+		url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+params['from'])
+	
+		begin
+			uri = URI.parse(url)
+			http = Net::HTTP.new(uri.host, uri.port)
+			http.use_ssl = true
+			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+			http.open_timeout = 2 # in seconds
+			http.read_timeout = 2 # in seconds	
+			response = http.request(Net::HTTP::Get.new(uri.request_uri))
+			text = response.body
+			
+			# Разбираем json
+			json_text = JSON.parse text
+			# 30.314548 59.969547
+			from_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+		rescue Timeout::Error
+			return false
+		end
+		
+		# Находим координаты адресов, которые предоставил пользователь
+		url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, '+params['to'])
+	
+		begin
+			uri = URI.parse(url)
+			http = Net::HTTP.new(uri.host, uri.port)
+			http.use_ssl = true
+			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+			http.open_timeout = 2 # in seconds
+			http.read_timeout = 2 # in seconds	
+			response = http.request(Net::HTTP::Get.new(uri.request_uri))
+			text = response.body
+			
+			# Разбираем json
+			json_text = JSON.parse text
+			# 30.314548 59.969547
+			to_xy = json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
+		rescue Timeout::Error
+			return false
+		end
+		
+		# Сохраняем маршрут, который ввел пользователь
+		@user.from = params['from']
+		@user.to = params['to']
+		@user.from_time = params['from_time_hour']+':'+params['from_time_min']
+		@user.to_time = params['to_time_hour']+':'+params['to_time_min']
+		
+		array = from_xy.split(' ')
+		@user.from_x = array[0]
+		@user.from_y = array[1]
+		
+		array = to_xy.split(' ')
+		@user.to_x = array[0]
+		@user.to_y = array[1]
+		
+		@user.step = 2
+		
+		@user.save
+	end
+end
+
 # Расстояние в метрах
 get '/len_test' do 
-	url = 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Екатеринбург, Папанина 3'
-	url =  URI::encode(url)
+	url = URI::encode('https://geocode-maps.yandex.ru/1.x/?format=json&geocode=Санкт-Петербург, Медиков проспект, 5')
 	
 	begin
 		uri = URI.parse(url)
@@ -552,8 +620,9 @@ get '/len_test' do
 		text = response.body
 		
 		# Разбираем json
-		point = JSON.parse text
-		
+		json_text = JSON.parse text
+		# 30.314548 59.969547
+		json_text['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'].to_s
 		
 		
 	rescue Timeout::Error

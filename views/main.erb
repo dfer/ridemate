@@ -24,7 +24,61 @@
         </div>
       </div>
     </form>
-  <% else %>
+  <% elsif @user.step == 2 and @user.role == 1 %>
+  	<form class="container validate" id="result" action="/about_me" method="post">
+      <div class="form__box">
+      	<div class="form__title">Расскажите о себе:</div>
+        <div class="form-group form-btn">
+        	<div class="form-group">
+	          <div class="label__title">Ваша машина:</div>
+	          <input class="form-control" type="text" name="city" required placeholder="">
+	        </div>
+        </div>
+        
+        <div class="form-group">
+        	<div class="label__title">Курите?</div>
+			<input type="radio" name="smoke" value="yes"> Да<Br>
+   			<input type="radio" name="smoke" value="no"> Нет<Br>
+        </div>
+        
+        <div class="form-group">
+          <div class="label__title">Стаж вождения:</div>
+			<select name="car">
+					<option value="mercedes">менее 3-х лет</option>
+					<option value="audi">От 3 до 7 лет</option>
+					<option value="audi">Более 7 лет</option>
+			</select>          
+        </div>
+        
+        <div class="form-group">
+          <div class="label__title">Стаж вождения:</div>
+			<select name="car">
+					<option value="mercedes">менее 3-х лет</option>
+					<option value="audi">От 3 до 7 лет</option>
+					<option value="audi">Более 7 лет</option>
+			</select>          
+        </div>
+
+        <div class="form-group">
+          <div class="label__title">Напишите подробнее о маршруте:</div>
+			<textarea></textarea>
+        </div>
+
+      </div>
+    </form>
+  <% elsif @user.step == 2 and @user.role == 0 %>
+  	 <div class="header">
+      <div class="container">
+        <div class="header__title">Ridemate</div>
+        <div class="header__discription">Сервис для поиска попутчиков</div>
+      </div>
+    </div>
+    <form class="container validate" id="result">
+      <div class="form__box">
+      	<div class="form__title">Здесь будет список водителей, которые живут рядом с вами</div>
+      </div>
+    </form>
+  <% elsif @user.step == 1 %>
   	<link rel="stylesheet" href="/themes/base/jquery.ui.all.css">
 	<script src="/jquery-1.7.1.js"></script>
 	<script src="/ui/jquery.ui.core.js"></script>
@@ -1518,8 +1572,7 @@
 				return false;
 			},
 			select: function( event, ui ) {
-				$( "#project_to" ).val( ui.item.label );
-				//$( "#project-id" ).val( ui.item.value );
+				$( "#project_to" ).val( ui.item.label+', ');
 				return false;
 			}
 		})
@@ -1531,14 +1584,7 @@
 		};
 	});
 </script>
-  	
-  	<div class="header">
-      <div class="container">
-        <div class="header__title">Ridemate</div>
-        <div class="header__discription">Сервис для поиска попутчиков</div>
-      </div>
-    </div>
-  	<form class="container validate" id="result">
+  	<form class="container validate" id="result" action="/trip" method="post">
   		<div class="form__box">
         <div class="form__title">Построить маршрут</div>
         <div class="form-group">
